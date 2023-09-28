@@ -1,0 +1,171 @@
+{
+    "_version": "1.9.0",
+    "sap.app": {
+        "id": "hcm.ux.mlsk",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "title": "{{APP_TITLE}}",
+        "description": "{{APP_DESCRIPTION}}",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/sap/opu/odata/sap/ZHCM_UX_MLSK_SRV/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "localService/metadata.xml"
+                }
+            }
+        },
+        "sourceTemplate": {
+            "id": "servicecatalog.connectivityComponentForManifest",
+            "version": "0.0.0",
+            "toolsId": "79db4f07-a8ee-4b25-b3f0-b55b940d699f"
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "sap-icon://task",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "rootView": {
+            "viewName": "hcm.ux.mlsk.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "app"
+        },
+        "config": {
+            "fullWidth": true
+        },
+        "dependencies": {
+            "minUI5Version": "1.71.59",
+            "libs": {
+                "sap.collaboration": {
+                    "lazy": true
+                },
+                "sap.f": {},
+                "sap.fiori": {
+                    "minVersion": ""
+                },
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.ushell": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "hcm.ux.mlsk.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/custom.css"
+                },
+                {
+                    "uri": "css/driver.css"
+                }
+            ],
+            "js": [
+                {
+                    "uri": "utils/lodash.js"
+                },
+                {
+                    "uri": "utils/moment.js"
+                },
+                {
+                    "uri": "utils/xlsx.js"
+                }
+            ]
+        },
+        "services": {
+            "ShellUIService": {
+                "factoryName": "sap.ushell.ui5service.ShellUIService",
+                "lazy": false,
+                "settings": {
+                    "setTitle": "auto"
+                }
+            }
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "viewPath": "hcm.ux.mlsk.view",
+                "controlId": "app",
+                "controlAggregation": "pages",
+                "bypassed": {
+                    "target": [
+                        "notFound"
+                    ]
+                },
+                "async": true
+            },
+            "routes": [
+                {
+                    "pattern": "",
+                    "name": "multipleSkill",
+                    "target": [
+                        "multipleSkill"
+                    ]
+                },
+                {
+                    "pattern": "error/page",
+                    "name": "errorpage",
+                    "target": [
+                        "errorPage"
+                    ]
+                }
+            ],
+            "targets": {
+                "multipleSkill": {
+                    "viewName": "MultipleSkill",
+                    "title": "{i18n>MULTIPLE_SKILL_VIEW_TITLE}",
+                    "viewId": "multipleSkill",
+                    "viewLevel": 1
+                },
+                "objectNotFound": {
+                    "viewName": "ObjectNotFound",
+                    "viewId": "objectNotFound"
+                },
+                "notFound": {
+                    "viewName": "NotFound",
+                    "viewId": "notFound"
+                },
+                "errorPage": {
+                    "viewName": "ErrorPage",
+                    "viewId": "errorPage"
+                }
+            }
+        }
+    },
+    "sap.platform.abap": {
+        "uri": "/sap/bc/ui5_ui5/sap/zhcm_ux_mlsk",
+        "_version": "1.1.0"
+    }
+}

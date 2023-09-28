@@ -1,0 +1,8 @@
+<mvc:View controllerName="hcm.ux.mlsk.controller.ErrorPage" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
+	<MessagePage title="Hata Oluştu" text="{messageModel>/messageText}" icon="{messageModel>/messageIcon}"
+		tooltip="{messageModel>/messageDescription}" id="idErrorPage">
+		<customDescription>
+			<Link id="link" text="Geri Dön" press="onLinkPressed"/>
+		</customDescription>
+	</MessagePage>
+</mvc:View>

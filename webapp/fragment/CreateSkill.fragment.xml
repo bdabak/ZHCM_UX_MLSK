@@ -1,0 +1,30 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+	<Dialog title="{i18n>CREATE_NEW_SKILL_TITLE}" state="None" type="Standard" contentWidth="60%" contentHeight="15%">
+		<content>
+			<f:Form editable="true" id="idNewSkillForm">
+				<f:layout>
+					<f:ResponsiveGridLayout labelSpanXL="12" labelSpanL="12" labelSpanM="12" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0"
+						emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1"/>
+				</f:layout>
+				<f:formContainers>
+					<f:FormContainer>
+						<f:formElements>
+							<f:FormElement label="{i18n>SKLTX}">
+								<f:fields>
+									<TextArea value="{path:'multipleSkillModel>/currentSkill/Skltx'}" required="true" rows="3" cols="20" maxLength="100"
+										valueLiveUpdate="true"/>
+								</f:fields>
+							</f:FormElement>
+						</f:formElements>
+					</f:FormContainer>
+				</f:formContainers>
+			</f:Form>
+		</content>
+		<beginButton>
+			<Button text="{i18n>CANCEL_ACTION}" press="onCancelCreateDialog"/>
+		</beginButton>
+		<endButton>
+			<Button text="{i18n>SAVE_ACTION}" icon="sap-icon://save" press="onSaveSkill" type="Emphasized"/>
+		</endButton>
+	</Dialog>
+</core:FragmentDefinition>

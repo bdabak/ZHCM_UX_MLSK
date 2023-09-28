@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+specVersion: "3.1"
+metadata:
+  name: hcm.ux.mlsk
+type: application
+builder:
+  resources:
+    excludes:
+      - /test/**
+      - /localService/**
+  customTasks:
+    - name: deploy-to-abap
+      afterTask: generateCachebusterInfo
+      configuration:
+        target:
+          destination: SEDEF_FIORI
+          url: https://fioritest.sedefshipyard.com
+          client: "100"
+        app:
+          name: ZHCM_UX_MLSK
+          description: Çoklu Beceri Tablosu
+          package: ZHR
+          transport: SFDK900258

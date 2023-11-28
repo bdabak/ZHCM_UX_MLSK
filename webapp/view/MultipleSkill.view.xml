@@ -1,317 +1,57 @@
-<mvc:View controllerName="hcm.ux.mlsk.controller.MultipleSkill"
-	xmlns:dnd="sap.ui.core.dnd"
+<mvc:View xmlns:semantic="sap.f.semantic" controllerName="hcm.ux.mlsk.controller.MultipleSkill"
+	xmlns="sap.m"
 	xmlns:l="sap.ui.layout"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:core="sap.ui.core"
-	xmlns="sap.m"
-	xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" height="100%">
+	xmlns:dnd="sap.ui.core.dnd"
+ height="100%">
 	<Page enableScrolling="false" showHeader="false" class="sapUiContentPadding">
 		<content>
 			<Toolbar class="sapUiTinyMargin">
-				<Label text="{i18n>PERIOD}" class="sapUiTinyMarginTop"/>
-				<ComboBox selectedKey="{path: 'multipleSkillModel>/selectedYear'}" items="{ path: 'multipleSkillModel>/yearList' }" selectionChange="onYearChanged" class="sapUiTinyMarginBegin">
-					<core:Item key="{multipleSkillModel>Year}" text="{multipleSkillModel>Year}"/>
+				<Label text="{i18n>PERIOD}" class="sapUiTinyMarginTop" />
+				<ComboBox selectedKey="{
+						path: 'multipleSkillModel>/selectedYear'
+					}" items="{
+						path: 'multipleSkillModel>/yearList'
+					}" selectionChange=".onYearChanged" class="sapUiTinyMarginBegin">
+					<core:Item key="{multipleSkillModel>Year}" text="{multipleSkillModel>Year}" />
 					<layoutData>
-						<l:GridData span="XL4 L4 M4 S12"/>
+						<l:GridData span="XL4 L4 M4 S12" />
 					</layoutData>
 				</ComboBox>
 				<ObjectStatus class="object-status-padding" title="{= ${multipleSkillModel>/currentEmployee} ? ${i18n>SELECTED_EMPLOYEE} : null }" text="{= ${multipleSkillModel>/currentEmployee} ? ${multipleSkillModel>/currentEmployee/Ename}.concat(' (' + parseInt(${multipleSkillModel>/currentEmployee/Pernr},10) + ')') : ${i18n>CLICK_EMPLOYEE} } " state="{= ${multipleSkillModel>/currentEmployee} ? 'Success' : 'Error' }" inverted="true" icon="{= ${multipleSkillModel>/currentEmployee} ? 'sap-icon://employee' : 'sap-icon://warning' }" />
-				<ToolbarSpacer/>
-				<Button icon="sap-icon://hint" press=".onStartIntro" visible="{= ${multipleSkillModel>/currentEmployee} ? true : false }" />
+				<ToolbarSpacer />
+				<Button icon="sap-icon://hint" press=".onStartIntro" visible="{= ${multipleSkillModel>/currentEmployee} &amp;&amp; ${multipleSkillModel>/skillPoolVisible} ? true : false }" />
 			</Toolbar>
-			<!--			<Panel fixed="true">
-				<content>
-					<l:VerticalLayout width="100%">
-						<l:content>
-							<core:Icon src="sap-icon://information" class="size5" color="#c62a2a">
-								<core:layoutData>
-									<FlexItemData growFactor="1"/>
-								</core:layoutData>
-							</core:Icon>
-							<ObjectStatus class="sapMObjectStatusLarge" text="{i18n>CLICK_EMPLOYEE}" state="Error"/>
-						</l:content>
-					</l:VerticalLayout>
-				</content>
-			</Panel>-->
-			<l:Splitter class="splitter-full-height" >
-				<!-- <Table id="table0" selectionMode="None" ariaLabelledBy="title2" visibleRowCountMode="Auto" rows="{ path: 'multipleSkillModel>/employeeList', templateShareable: false, sorter: { path: 'Orgtx', descending: false, group: true }}" noData="{i18n>NO_DATA_EMPLOYEE}">
-					<extension>
-						<OverflowToolbar id="infobar0" style="Clear">
-							<Title id="title" text="{i18n>EMPLOYEE_LIST}"/>
-						</OverflowToolbar>
-					</extension>
-					<rowSettingsTemplate>
-						<RowSettings highlight="{=${multipleSkillModel>Stats} === true ? 'Success' : 'Warning'}"/>
-					</rowSettingsTemplate>
-					<columns>
-						<Column>
-							<Text text="{i18n>ENAME}"/>
-							<template>
-								<Link text="{multipleSkillModel>Ename}" cd:Pernr="{multipleSkillModel>Pernr}" press=".onSelectEmployee"/>
-							</template>
-						</Column>
-						<Column width="55%">
-							<Text text="{i18n>ORGTX}"/>
-							<template>
-								<Text text="{multipleSkillModel>Orgtx}" wrapping="false"/>
-							</template>
-						</Column>
-					</columns>
-					<layoutData>
-						<l:SplitterLayoutData size="25%"/>
-					</layoutData>
-				</Table> -->
-								<!-- items="{path: 'multipleSkillModel>/employeeList', templateShareable: false, sorter: { path: 'Orgtx', descending: false, group: true }}" sticky="HeaderToolbar,ColumnHeaders" noDataText="{i18n>NO_DATA_EMPLOYEE}" -->
-				<Table 
-					id="idEmployeeListTable"
-				    growingScrollToLoad="true"
-				items="{path: '/EmployeeSet', templateShareable: false, sorter: { path: 'Orgtx', descending: false, group: true }}" sticky="HeaderToolbar,ColumnHeaders" noDataText="{i18n>NO_DATA_EMPLOYEE}">
-					<headerToolbar>
-						<OverflowToolbar id="infobar0" style="Clear">
-							<Title id="title" text="{i18n>EMPLOYEE_LIST}"/>
-							<!-- <ToolbarSpacer />
-							<Button icon="sap-icon://search" /> -->
-						</OverflowToolbar>
-					</headerToolbar>
-					<infoToolbar>
-						<Toolbar class="sapUiNoContentPadding">
-							<SearchField value="{multipleSkillModel>/employeeSearchQuery}"  class="search-field-with-padding" search=".onSearchEmployee"/>
-						</Toolbar>
-					</infoToolbar>
-					<columns>
-						<Column>
-							
-								<Text text="{i18n>ENAME}"/>
-							
-						</Column>
-						<!-- <Column demandPopin="true" minScreenWidth="Tablet" width="10rem">
-							
-								<Text text="{i18n>PERNR}"/>
-							
-						</Column> -->
-					</columns>
-					<items>
-						<ColumnListItem type="Navigation" cd:Pernr="{Pernr}" press=".onSelectEmployee">
-							<cells>
-								<ObjectIdentifier text="{Plstx}"
-									title="{= ${Ename}.concat(' (' + parseInt(${Pernr},10) + ')') }"
-									cd:Pernr="{Pernr}"
-								>
-									<customData>
-										<core:CustomData key="state" value="{=${Stats} === true ? 'success' : 'warning'}" writeToDom="true" />
-									</customData>
-								</ObjectIdentifier>
-								<!-- <Link text="{multipleSkillModel>Ename}" cd:Pernr="{multipleSkillModel>Pernr}" press=".onSelectEmployee">
-									<customData>
-										<core:CustomData key="state" value="{=${multipleSkillModel>Stats} === true ? 'success' : 'warning'}" writeToDom="true" />
-									</customData>
-								</Link>
-								<Text text="{multipleSkillModel>Pernr}" /> -->
-							</cells>
-						</ColumnListItem>
-					</items>
-					<layoutData>
-						<l:SplitterLayoutData size="{= ${multipleSkillModel>/currentEmployee} ? '25%' : '100%' }"/>
-					</layoutData>
-				</Table>
-
-				<Table id="idSkillPoolTable" 
-					alternateRowColors="true"
-				items="{ path: 'multipleSkillModel>/skillPool' , templateShareable: false }" noDataText="{i18n>NO_DATA_SKILL_POOL}" sticky="HeaderToolbar,ColumnHeaders" visible="{= ${multipleSkillModel>/currentEmployee} ? true : false }">
-					<headerToolbar>
-						<OverflowToolbar id="infobar1" style="Clear">
-							<Title id="title1" text="{i18n>SKILL_POOL}"/>
-							<ToolbarSpacer/>
-							<Button id="idCreateNewSkillButton"
-								
-							 icon="sap-icon://add" text="{i18n>NEW_ACTION}" press=".onCreateSkill" type="Emphasized"/>
-						</OverflowToolbar>
-					</headerToolbar>
-					<columns>
-						<Column>
-							<Text text="{i18n>SKLTX}"/>
-
-						</Column>
-						<Column width="18%" demandPopin="true" minScreenWidth="Desktop" >
-							<Text text="{i18n>ISUSD}" />
-
-						</Column>
-						<Column width="18%" demandPopin="true" minScreenWidth="Desktop" >
-							<Text text="{i18n>ACTVE}"/>
-
-						</Column>
-						<Column width="15%" demandPopin="true" minScreenWidth="Desktop" >
-
-						</Column>
-						
-					</columns>
-					<items>
-						<ColumnListItem>
-							<Link text="{multipleSkillModel>Skltx}" cd:Source="POOL" cd:Sklid="{multipleSkillModel>Sklid}" press=".onModifySkill"/>
-							<CheckBox selected="{multipleSkillModel>Isusd}" editable="false"/>
-							<CheckBox selected="{multipleSkillModel>Actve}" cd:Sklid="{multipleSkillModel>Sklid}" select="onActiveSkill"/>
-							<Button icon="sap-icon://delete" text="{i18n>DELETE_ACTION}" cd:Sklid="{multipleSkillModel>Sklid}" press=".onDeleteSkill" type="Reject" enabled="{=${multipleSkillModel>Isusd} === false }"/>
-
-						</ColumnListItem>
-					</items>
-					<dragDropConfig>
-						<dnd:DragInfo groupName="moveToTable2" sourceAggregation="items" dragStart="onDragStart" enabled="{multipleSkillModel>/editable}"/>
-						<dnd:DropInfo groupName="moveToTable1" targetAggregation="items" dropPosition="OnOrBetween" drop="onDropSkillPool" enabled="{multipleSkillModel>/editable}"/>
-					</dragDropConfig>
-					<layoutData>
-						<l:SplitterLayoutData size="{= ${multipleSkillModel>/currentEmployee} ? 'auto' : '0%' }"/>
-					</layoutData>
-				</Table>
-
-				<!-- <Table id="table1" selectionMode="Single" visibleRowCountMode="Auto" ariaLabelledBy="title" rows="{ path: 'multipleSkillModel>/skillPool' , templateShareable: false }" noData="{i18n>NO_DATA_SKILL_POOL}">
-					<extension>
-						<OverflowToolbar id="infobar1" style="Clear">
-							<Title id="title1" text="{i18n>SKILL_POOL}"/>
-							<ToolbarSpacer/>
-							<Button icon="sap-icon://add" text="{i18n>NEW_ACTION}" press=".onCreateSkill" type="Emphasized"/>
-						</OverflowToolbar>
-					</extension>
-					<columns>
-						<Column>
-							<Text text="{i18n>SKLTX}"/>
-							<template>
-								<Link text="{multipleSkillModel>Skltx}" cd:Source="POOL" cd:Sklid="{multipleSkillModel>Sklid}" press=".onModifySkill"/>
-							</template>
-						</Column>
-						<Column width="18%">
-							<Text text="{i18n>ISUSD}"/>
-							<template>
-								<CheckBox selected="{multipleSkillModel>Isusd}" editable="false"/>
-							</template>
-						</Column>
-						<Column width="18%">
-							<Text text="{i18n>ACTVE}"/>
-							<template>
-								<CheckBox selected="{multipleSkillModel>Actve}" cd:Sklid="{multipleSkillModel>Sklid}" select="onActiveSkill"/>
-							</template>
-						</Column>
-						<Column width="15%">
-							<template>
-								<Button icon="sap-icon://delete" text="{i18n>DELETE_ACTION}" cd:Sklid="{multipleSkillModel>Sklid}" press=".onDeleteSkill" type="Reject" enabled="{=${multipleSkillModel>Isusd} === false }"/>
-							</template>
-						</Column>
-					</columns>
-					<dragDropConfig>
-						<dnd:DragInfo groupName="moveToTable2" sourceAggregation="rows" dragStart="onDragStart" enabled="{multipleSkillModel>/editable}"/>
-						<dnd:DropInfo groupName="moveToTable1" targetAggregation="rows" dropPosition="OnOrBetween" drop="onDropSkillPool" enabled="{multipleSkillModel>/editable}"/>
-					</dragDropConfig>
-					<layoutData>
-						<l:SplitterLayoutData size="35%"/>
-					</layoutData>
-				</Table> -->
-
-				<Table id="idEmployeeSkillsTable" 
-					alternateRowColors="true"
-				items="{path: 'multipleSkillModel>/employeeSkill', templateShareable: false }" noDataText="{i18n>NO_DATA_EMPLOYEE_SKILL}" sticky="HeaderToolbar,ColumnHeaders" visible="{= ${multipleSkillModel>/currentEmployee} ? true : false }">
-					<headerToolbar>
-						<OverflowToolbar id="infobar2" style="Clear">
-							<Title id="title2" text="{i18n>EMPLOYEE_SKILL}"/>
-							<ToolbarSpacer/>
-							<Button id="idSaveSkillPointsButton" icon="sap-icon://save" text="{i18n>SAVE_POINT_ACTION}" press=".onSaveEmployeeSkill" type="Emphasized" enabled="{multipleSkillModel>/editable}"/>
-						</OverflowToolbar>
-					</headerToolbar>
-					<columns>
-						<Column>
-							<Text text="{i18n>SKLTX}"/>
-
-						</Column>
-						<Column width="20%" demandPopin="true" minScreenWidth="Desktop" >
-							<Text text="{i18n>AVLBL}"/>
-
-						</Column>
-						<Column width="20%" demandPopin="true" minScreenWidth="Desktop" >
-							<Text text="{i18n>TRGET}"/>
-
-						</Column>
-						<Column width="20%" demandPopin="true" minScreenWidth="Desktop" >
-							<Text text="{i18n>REALZ}"/>
-						</Column>
-						<Column demandPopin="true" minScreenWidth="3500px" width="100%">
-							<Text text="{i18n>DPEXP}"/>
-						</Column>
-					</columns>
-					<items>
-						<ColumnListItem>
-							<Link text="{multipleSkillModel>Skltx}" cd:Source="EMPLOYEE" cd:Sklid="{multipleSkillModel>Sklid}" press=".onModifySkill"/>
-							<Select selectedKey="{multipleSkillModel>Avlbl}" forceSelection="false" items="{ path: 'multipleSkillModel>/evaluationList', templateShareable: false }" editable="{multipleSkillModel>/editable}"
-								
-							>
-								<core:ListItem key="{multipleSkillModel>Key}" text="{multipleSkillModel>Text}" icon="{multipleSkillModel>Icon}"/>
-							</Select>
-							<Select forceSelection="false" selectedKey="{multipleSkillModel>Trget}" items="{ path: 'multipleSkillModel>/evaluationList' , templateShareable: false  }" editable="{multipleSkillModel>/editable}">
-								<core:ListItem key="{multipleSkillModel>Key}" text="{multipleSkillModel>Text}" icon="{multipleSkillModel>Icon}"/>
-							</Select>
-							<Select forceSelection="false" selectedKey="{multipleSkillModel>Realz}" items="{ path: 'multipleSkillModel>/evaluationList', templateShareable: false }" editable="{multipleSkillModel>/editable}">
-								<core:ListItem key="{multipleSkillModel>Key}" text="{multipleSkillModel>Text}" icon="{multipleSkillModel>Icon}"/>
-							</Select>
-							<TextArea rows="3" value="{multipleSkillModel>Dpexp}" maxLength="500" width="100%"/>
-						</ColumnListItem>
-					</items>
-						<dragDropConfig>
-						<dnd:DragInfo groupName="moveToTable1" sourceAggregation="items" dragStart="onDragStart" enabled="{multipleSkillModel>/editable}"/>
-						<dnd:DropInfo groupName="moveToTable2" targetAggregation="items" dropPosition="OnOrBetween" drop="onDropEmployeeSkill" enabled="{multipleSkillModel>/editable}"/>
-					</dragDropConfig>
-
-					<layoutData>
-						<l:SplitterLayoutData size="{= ${multipleSkillModel>/currentEmployee} ? 'auto' : '0%' }"/>
-					</layoutData>
-				</Table>
-
-
-				<!-- <Table id="table2" selectionMode="Single" visibleRowCountMode="Auto" ariaLabelledBy="title2" rows="{ path: 'multipleSkillModel>/employeeSkill', templateShareable: false }" noData="{i18n>NO_DATA_EMPLOYEE_SKILL}">
-					<extension>
-						<OverflowToolbar id="infobar2" style="Clear">
-							<Title id="title2" text="{i18n>EMPLOYEE_SKILL}"/>
-							<ToolbarSpacer/>
-							<Button icon="sap-icon://save" text="{i18n>SAVE_POINT_ACTION}" press=".onSaveEmployeeSkill" type="Emphasized" enabled="{multipleSkillModel>/editable}"/>
-						</OverflowToolbar>
-					</extension>
-					<columns>
-						<Column>
-							<Text text="{i18n>SKLTX}"/>
-							<template>
-								<Link text="{multipleSkillModel>Skltx}" cd:Source="EMPLOYEE" cd:Sklid="{multipleSkillModel>Sklid}" press=".onModifySkill"/>
-							</template>
-						</Column>
-						<Column width="16%">
-							<Text text="{i18n>AVLBL}"/>
-							<template>
-								<Select selectedKey="{multipleSkillModel>Avlbl}" forceSelection="false" items="{ path: 'multipleSkillModel>/evaluationList', templateShareable: false }" editable="{multipleSkillModel>/editable}">
-									<core:ListItem key="{multipleSkillModel>Key}" text="{multipleSkillModel>Text}" icon="{multipleSkillModel>Icon}"/>
-								</Select>
-							</template>
-						</Column>
-						<Column width="15%">
-							<Text text="{i18n>TRGET}"/>
-							<template>
-								<Select forceSelection="false" selectedKey="{multipleSkillModel>Trget}" items="{ path: 'multipleSkillModel>/evaluationList' , templateShareable: false  }" editable="{multipleSkillModel>/editable}">
-									<core:ListItem key="{multipleSkillModel>Key}" text="{multipleSkillModel>Text}" icon="{multipleSkillModel>Icon}"/>
-								</Select>
-							</template>
-						</Column>
-						<Column width="18%">
-							<Text text="{i18n>REALZ}"/>
-							<template>
-								<Select forceSelection="false" selectedKey="{multipleSkillModel>Realz}" items="{ path: 'multipleSkillModel>/evaluationList', templateShareable: false }" editable="{multipleSkillModel>/editable}">
-									<core:ListItem key="{multipleSkillModel>Key}" text="{multipleSkillModel>Text}" icon="{multipleSkillModel>Icon}"/>
-								</Select>
-							</template>
-						</Column>
-					</columns>
-					<dragDropConfig>
-						<dnd:DragInfo groupName="moveToTable1" sourceAggregation="rows" dragStart="onDragStart" enabled="{multipleSkillModel>/editable}"/>
-						<dnd:DropInfo groupName="moveToTable2" targetAggregation="rows" dropPosition="OnOrBetween" drop="onDropEmployeeSkill" enabled="{multipleSkillModel>/editable}"/>
-					</dragDropConfig>
-					<layoutData>
-						<l:SplitterLayoutData size="auto"/>
-					</layoutData>
-				</Table> -->
-			</l:Splitter>
+			<l:ResponsiveSplitter class="splitter-full-height">
+				<l:PaneContainer>
+					<l:SplitPane>
+						<core:Fragment type="XML" fragmentName="hcm.ux.mlsk.fragment.EmployeeList"/> 
+					</l:SplitPane>
+					<l:PaneContainer orientation="Vertical" id="idSkillActionContainer">
+						<l:SplitPane demandPane="{multipleSkillModel>/skillPoolVisible}" requiredParentWidth="{= ${multipleSkillModel>/skillPoolVisible} ? 800 : 12000 }">
+							<Page showHeader="false">
+								<content>
+									<core:Fragment type="XML" fragmentName="hcm.ux.mlsk.fragment.SkillPool"/>
+								</content>
+								<dragDropConfig>
+									<dnd:DropInfo groupName="removeEmployeeSkill" dropPosition="OnOrBetween" drop=".onDropSkillPool" enabled="{multipleSkillModel>/editable}" />
+								</dragDropConfig>
+							</Page>
+						</l:SplitPane>
+						<l:SplitPane>
+							<Page showHeader="false">
+								<content>
+									<core:Fragment type="XML" fragmentName="hcm.ux.mlsk.fragment.EmployeeSkills"/>
+								</content>
+								<dragDropConfig>
+									<dnd:DropInfo groupName="addEmployeeSkill" dropLayout="Vertical" drop=".onDropEmployeeSkill" enabled="{multipleSkillModel>/editable}" />
+								</dragDropConfig>
+							</Page>
+						</l:SplitPane>
+					</l:PaneContainer>
+				</l:PaneContainer>
+			</l:ResponsiveSplitter>
 		</content>
 	</Page>
 </mvc:View>

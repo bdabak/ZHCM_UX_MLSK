@@ -1,0 +1,45 @@
+<core:FragmentDefinition xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core"
+	xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+
+	<Table id="idEmployeeListTable" growingScrollToLoad="true" items="{
+								path: '/EmployeeSet',
+								templateShareable: false,
+								sorter: {
+									path: 'Orgtx',
+									descending: false,
+									group: true
+								}
+							}" sticky="HeaderToolbar,ColumnHeaders" noDataText="{i18n>NO_DATA_EMPLOYEE}">
+		<headerToolbar>
+			<OverflowToolbar id="infobar0" style="Clear">
+				<Title id="title" text="{i18n>EMPLOYEE_LIST}" />
+			</OverflowToolbar>
+		</headerToolbar>
+		<infoToolbar>
+			<Toolbar class="sapUiNoContentPadding">
+				<SearchField value="{multipleSkillModel>/employeeSearchQuery}" class="search-field-with-padding" search=".onSearchEmployee" />
+			</Toolbar>
+		</infoToolbar>
+		<columns>
+			<Column>
+				<Text text="{i18n>ENAME}" />
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem type="Navigation" cd:Pernr="{Pernr}" press=".onSelectEmployee">
+				<cells>
+					<ObjectIdentifier text="{Plstx}" title="{= ${Ename}.concat(' (' + parseInt(${Pernr},10) + ')') }" cd:Pernr="{Pernr}">
+						<customData>
+							<core:CustomData key="state" value="{=${Stats} === true ? 'success' : 'warning'}" writeToDom="true" />
+						</customData>
+					</ObjectIdentifier>
+				</cells>
+			</ColumnListItem>
+		</items>
+		<layoutData>
+			<l:SplitterLayoutData size="{= ${multipleSkillModel>/currentEmployee} ? '25%' : '100%' }" />
+		</layoutData>
+	</Table>
+</core:FragmentDefinition>

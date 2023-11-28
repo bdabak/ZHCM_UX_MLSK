@@ -1,7 +1,8 @@
 sap.ui.define([
 	"hcm/ux/mlsk/controller/BaseController",
-	"sap/ui/model/json/JSONModel"
-], function (BaseController, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	"com/smod/ux/lib/thirdparty/sweetalert"
+], function (BaseController, JSONModel, SwalJS) {
 	"use strict";
 
 	return BaseController.extend("hcm.ux.mlsk.controller.App", {

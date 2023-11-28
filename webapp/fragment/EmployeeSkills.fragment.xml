@@ -1,0 +1,89 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:dnd="sap.ui.core.dnd"
+    xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+    <Table id="idEmployeeSkillsTable" alternateRowColors="true" items="{
+											path: 'multipleSkillModel>/employeeSkill',
+											templateShareable: false
+										}" noDataText="{i18n>NO_DATA_EMPLOYEE_SKILL}" sticky="HeaderToolbar,ColumnHeaders" visible="{= ${multipleSkillModel>/currentEmployee} ? true : false }">
+        <headerToolbar>
+            <OverflowToolbar id="infobar2" style="Clear">
+                <Title id="title2" text="{i18n>EMPLOYEE_SKILL}" />
+                <ToolbarSpacer />
+                <Button icon="{= ${multipleSkillModel>/skillPoolVisible} ? 'sap-icon://full-screen' : 'sap-icon://exit-full-screen' }" press=".onToggleFullScreen" />
+                <Button id="idSaveSkillPointsButton" icon="sap-icon://save" text="{i18n>SAVE_POINT_ACTION}" press=".onSaveEmployeeSkill" type="Emphasized" enabled="{multipleSkillModel>/editable}" />
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+            <Column>
+                <Text text="{i18n>SKLTX}" />
+                <footer >
+                    <Text text="Toplam" />
+                </footer>
+            </Column>
+            <Column width="20%" demandPopin="true" minScreenWidth="Desktop">
+                <Text   text="{i18n>AVLBL}"  />
+                <footer>
+                    <Text width="100%" textAlign="Center"  text="{multipleSkillModel>/employeeSkillsFooter/currentAverage}" />
+                </footer>
+            </Column>
+            <Column width="20%" demandPopin="true" minScreenWidth="Desktop">
+                <Text  text="{i18n>TRGET}" />
+                <footer>
+                    <Text width="100%" textAlign="Center"  text="{multipleSkillModel>/employeeSkillsFooter/targetAverage}" />
+                </footer>
+            </Column>
+            <Column width="20%" demandPopin="true" minScreenWidth="Desktop">
+                <Text text="{i18n>REALZ}" />
+                <footer>
+                    <Text width="100%" textAlign="Center"  text="{multipleSkillModel>/employeeSkillsFooter/realisedAverage}" />
+                </footer>
+            </Column>
+            <Column minScreenWidth="Phone" width="2rem" />
+            <Column demandPopin="true" minScreenWidth="10500px" width="100%">
+                <Text text="{i18n>DPEXP}" />
+            </Column>
+            
+        </columns>
+        <items>
+            <ColumnListItem>
+                <Link text="{multipleSkillModel>Skltx}" cd:Source="EMPLOYEE" cd:Sklid="{multipleSkillModel>Sklid}" press=".onModifySkill" />
+                <Select selectedKey="{multipleSkillModel>Avlbl}" forceSelection="false" items="{
+														path: 'multipleSkillModel>/evaluationList',
+														templateShareable: false
+													}" editable="{multipleSkillModel>/editable}" width="100%"
+                                                    change=".onSkillChanged"
+                                                    >
+                    <core:ListItem key="{multipleSkillModel>Key}" text="{multipleSkillModel>Text}" icon="{multipleSkillModel>Icon}" />
+                </Select>
+                <Select forceSelection="false" selectedKey="{multipleSkillModel>Trget}" items="{
+														path: 'multipleSkillModel>/evaluationList',
+														templateShareable: false
+													}" editable="{multipleSkillModel>/editable}" width="100%"
+                                                    change=".onSkillChanged">
+                    <core:ListItem key="{multipleSkillModel>Key}" text="{multipleSkillModel>Text}" icon="{multipleSkillModel>Icon}" />
+                </Select>
+                <Select forceSelection="false" selectedKey="{multipleSkillModel>Realz}" items="{
+														path: 'multipleSkillModel>/evaluationList',
+														templateShareable: false
+													}" editable="{multipleSkillModel>/editable}" width="100%"
+                                                    change=".onSkillChanged">
+                    <core:ListItem key="{multipleSkillModel>Key}" text="{multipleSkillModel>Text}" icon="{multipleSkillModel>Icon}" />
+                </Select>
+                <Button icon="sap-icon://delete" cd:Sklid="{multipleSkillModel>Sklid}" 
+                    cd:Evprd="{multipleSkillModel>Evprd}"
+                    cd:Pernr="{multipleSkillModel>Pernr}"
+                type="Reject" press=".onDeleteEmployeeSkill" enabled="{multipleSkillModel>/editable}" />
+                <TextArea rows="3" value="{multipleSkillModel>Dpexp}" maxLength="500" width="100%" required="true" />
+            </ColumnListItem>
+        </items>
+
+        <dragDropConfig>
+            <dnd:DragInfo groupName="removeEmployeeSkill" sourceAggregation="items" dragStart=".onDragStart" enabled="{multipleSkillModel>/editable}" />
+        </dragDropConfig>
+        <layoutData>
+            <l:SplitterLayoutData size="{= ${multipleSkillModel>/currentEmployee} ? 'auto' : '0%' }" />
+        </layoutData>
+    </Table>
+</core:FragmentDefinition>

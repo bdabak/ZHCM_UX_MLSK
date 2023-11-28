@@ -63,7 +63,10 @@
                 },
                 "sap.m": {},
                 "sap.ui.core": {},
-                "sap.ushell": {}
+                "sap.ushell": {},
+                "com.smod.ux.lib": {
+                    "minVersion": ""
+                }
             }
         },
         "contentDensities": {

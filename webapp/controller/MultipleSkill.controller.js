@@ -58,9 +58,9 @@ sap.ui.define([
 			} else {
 				oViewModel.setProperty("/editable", false);
 			}
-			
-			oViewModel.setProperty("/selectedEmployee",{});
-			oViewModel.setProperty("/currentEmployee",null);
+
+			oViewModel.setProperty("/selectedEmployee", {});
+			oViewModel.setProperty("/currentEmployee", null);
 			oViewModel.setProperty("/skillPool", []);
 			oViewModel.setProperty("/employeeSkill", []);
 			this._getEmployeeList();
@@ -206,7 +206,12 @@ sap.ui.define([
 				}
 			}
 		},
-		onStartIntro: function(){
+		onDeleteEmployeeSkill: function (oEvent) {
+			var oButton = oEvent.getSource();
+			var oSkill = oButton.data();
+			this._deleteEmployeeSkill(oSkill);
+		},
+		onStartIntro: function () {
 			const that = this;
 			const driver = window.driver.js.driver;
 			const driverObj = driver({
@@ -215,15 +220,15 @@ sap.ui.define([
 				overlayOpacity: 0.7,
 				showProgress: true,
 				steps: [
-				  { element: "#" + that.byId("idEmployeeListTable").$().attr("id"), popover: { title: 'Çalışan Seçimi', description: 'Çalışan listesinden ilgili satır seçilir. Seçilen çalışan ile birlikte ekranın sağ tarafındaki <em>Beceri Havuzu</em> ve <em>Çalışan Becerileri</em> bölümleri güncellenir.', side: "right", align: 'start' }},
-				  { element: "#" + that.byId("idSkillPoolTable").$().attr("id"), popover: { title: 'Beceri Havuzu', description: 'Beceri havuzu, çalışanlara atanacak olan becerileri içerir. Çalışan seçildikten sonra, çalışana eklenmemiş aktif beceriler bu tabloda listelenir. İlgili satır sürükle ve bırak işlemiyle, <em>Çalışan Becerileri</em> listesine aktarılabilir.', side: "top", align: 'center' }},
-				  { element: "#" + that.byId("idEmployeeSkillsTable").$().attr("id"), popover: { title: 'Çalışan Becerileri', description: 'Çalışana eklenen ve takip edilen beceriler bu bölümdeki listede bulunur. Yıl boyunca buradaki listede çalışan bazında becerileri takip edebilirsiniz.', side: "left", align: 'start' }},
-				  { element: "#" + that.byId("idCreateNewSkillButton").$().attr("id"), popover: { title: 'Yeni Beceri', description: 'Beceri havuzuna yeni bir beceri eklemek için burayı kullanabilirsiniz.Eklediğiniz beceriyi seçtiğiniz çalışana ekleyebilirsiniz.', side: "bottom", align: 'center' }},
-				  { element: "#" + that.byId("idSaveSkillPointsButton").$().attr("id"), popover: { title: 'Puanları Kaydet ', description: 'Seçili çalışan için girilen Mevcut, Hedef ve Gerçekleşen puanlamamalarınızı kaydetmenize yarar.', side: "bottom", align: 'center' }},
+					{ element: "#" + that.byId("idEmployeeListTable").$().attr("id"), popover: { title: 'Çalışan Seçimi', description: 'Çalışan listesinden ilgili satır seçilir. Seçilen çalışan ile birlikte ekranın sağ tarafındaki <em>Beceri Havuzu</em> ve <em>Çalışan Becerileri</em> bölümleri güncellenir.', side: "right", align: 'start' } },
+					{ element: "#" + that.byId("idSkillPoolTable").$().attr("id"), popover: { title: 'Beceri Havuzu', description: 'Beceri havuzu, çalışanlara atanacak olan becerileri içerir. Çalışan seçildikten sonra, çalışana eklenmemiş aktif beceriler bu tabloda listelenir. İlgili satır sürükle ve bırak işlemiyle, <em>Çalışan Becerileri</em> listesine aktarılabilir.', side: "top", align: 'center' } },
+					{ element: "#" + that.byId("idEmployeeSkillsTable").$().attr("id"), popover: { title: 'Çalışan Becerileri', description: 'Çalışana eklenen ve takip edilen beceriler bu bölümdeki listede bulunur. Yıl boyunca buradaki listede çalışan bazında becerileri takip edebilirsiniz.', side: "left", align: 'start' } },
+					{ element: "#" + that.byId("idCreateNewSkillButton").$().attr("id"), popover: { title: 'Yeni Beceri', description: 'Beceri havuzuna yeni bir beceri eklemek için burayı kullanabilirsiniz.Eklediğiniz beceriyi seçtiğiniz çalışana ekleyebilirsiniz.', side: "bottom", align: 'center' } },
+					{ element: "#" + that.byId("idSaveSkillPointsButton").$().attr("id"), popover: { title: 'Puanları Kaydet ', description: 'Seçili çalışan için girilen Mevcut, Hedef ve Gerçekleşen puanlamamalarınızı kaydetmenize yarar.', side: "bottom", align: 'center' } },
 				]
-			  });
-			  
-			  driverObj.drive();
+			});
+
+			driverObj.drive();
 		},
 		onUpdateSkill: function (oEvent) {
 			var oForm = sap.ui.getCore().byId("idModifySkillForm");
@@ -286,42 +291,8 @@ sap.ui.define([
 			var sSklid = oEvent.getSource().data("Sklid");
 			var oViewModel = this.getModel("multipleSkillModel");
 			var oSkill = this._findSkill(oViewModel, 'POOL', sSklid);
-			var sTitle = this.getText("DELETE_SKILL_WARNING");
-			var oContent = new sap.m.VBox({
-				items: [
-					new sap.m.Text({
-						text: '{i18n>DELETE_SKILL_CONFIRMATION}'
-					}),
-					new sap.m.HBox({
-						items: [
-							new sap.m.VBox({
-								items: [
-									new sap.m.Text({
-										text: '{i18n>SKLTX}:'
-									}).addStyleClass("ptBoldText")
-								]
-							}).addStyleClass("sapUiTinyMarginEnd"),
-							new sap.m.VBox({
-								items: [
-									new sap.m.Text({
-										text: oSkill.SKLTX
-									})
-								]
-							})
-						]
-					}).addStyleClass("sapUiTinyMargin"),
-					new sap.m.Text({
-						text: "{i18n>DO_YOU_CONFIRM}"
-					}),
-					new sap.m.MessageStrip({
-						text: "{i18n>IRREVERSIBLE_ACTION_WARNING}",
-						type: "Warning",
-						showIcon: true
-					}).addStyleClass("sapUiTinyMargin")
-
-				]
-			}).addStyleClass("sapUiTinyMargin");
 			var that = this;
+			// var sTitle = this.getText("DELETE_SKILL_WARNING");
 
 			var doDelete = function () {
 				var oModel = that.getModel();
@@ -347,30 +318,115 @@ sap.ui.define([
 				});
 			};
 
-			var oBeginButtonProp = {
-				type: "Reject",
-				text: this.getText("DELETE_ACTION"),
-				icon: "sap-icon://delete",
-				onPressed: function () {
-					doDelete();
-				}
-			};
+			this.confirmDialog({
+				title: this.getText("DELETE_SKILL_WARNING", []),
+				html: this.getText("SKILL_WILL_BE_DELETED", [oSkill.Skltx]),
+				icon: "warning",
+				confirmButtonText: this.getText("DELETE_ACTION"),
+				confirmCallbackFn: doDelete,
+			});
 
-			var oEndButtonProp = {
-				type: "Default",
-				text: this.getText("CANCEL_ACTION"),
-				icon: "sap-icon://sys-cancel",
-				onPressed: function () { }
-			};
 
-			this.getConfirmDialog(sTitle, "Warning", oContent, oBeginButtonProp, oEndButtonProp).open();
+
+			// var oContent = new sap.m.VBox({
+			// 	items: [
+			// 		new sap.m.Text({
+			// 			text: '{i18n>DELETE_SKILL_CONFIRMATION}'
+			// 		}),
+			// 		new sap.m.HBox({
+			// 			items: [
+			// 				new sap.m.VBox({
+			// 					items: [
+			// 						new sap.m.Text({
+			// 							text: '{i18n>SKLTX}:'
+			// 						}).addStyleClass("ptBoldText")
+			// 					]
+			// 				}).addStyleClass("sapUiTinyMarginEnd"),
+			// 				new sap.m.VBox({
+			// 					items: [
+			// 						new sap.m.Text({
+			// 							text: oSkill.SKLTX
+			// 						})
+			// 					]
+			// 				})
+			// 			]
+			// 		}).addStyleClass("sapUiTinyMargin"),
+			// 		new sap.m.Text({
+			// 			text: "{i18n>DO_YOU_CONFIRM}"
+			// 		}),
+			// 		new sap.m.MessageStrip({
+			// 			text: "{i18n>IRREVERSIBLE_ACTION_WARNING}",
+			// 			type: "Warning",
+			// 			showIcon: true
+			// 		}).addStyleClass("sapUiTinyMargin")
+
+			// 	]
+			// }).addStyleClass("sapUiTinyMargin");
+			// 
+
+			// var doDelete = function () {
+			// 	var oModel = that.getModel();
+			// 	var sPath = oModel.createKey("/SkillPoolSet", {
+			// 		"Sklid": sSklid
+			// 	});
+			// 	that.openBusyFragment("SKILL_BEING_DELETED", []);
+			// 	oModel.remove(sPath, {
+			// 		success: function (oData, oResponse) {
+			// 			/* Close busy indicator*/
+			// 			that.closeBusyFragment();
+
+			// 			/* Success message*/
+			// 			that.alertMessage("S", "MESSAGE_SUCCESSFUL", "DELETE_SKILL_SUCCESSFUL", []);
+
+			// 			/* Trigger refresh*/
+			// 			that._getEmployeeSkill();
+			// 		},
+			// 		error: function (oError) {
+			// 			/* Close busy indicator*/
+			// 			that.closeBusyFragment();
+			// 		}
+			// 	});
+			// };
+
+			// var oBeginButtonProp = {
+			// 	type: "Reject",
+			// 	text: this.getText("DELETE_ACTION"),
+			// 	icon: "sap-icon://delete",
+			// 	onPressed: function () {
+			// 		doDelete();
+			// 	}
+			// };
+
+			// var oEndButtonProp = {
+			// 	type: "Default",
+			// 	text: this.getText("CANCEL_ACTION"),
+			// 	icon: "sap-icon://sys-cancel",
+			// 	onPressed: function () { }
+			// };
+
+			// this.getConfirmDialog(sTitle, "Warning", oContent, oBeginButtonProp, oEndButtonProp).open();
 		},
-		onSearchEmployee: function(){
+		onSearchEmployee: function () {
 			this._getEmployeeList();
 		},
+		onToggleFullScreen: function () {
+			var oViewModel = this.getModel("multipleSkillModel");
+			var bVisible = oViewModel.getProperty("/skillPoolVisible");
+
+			oViewModel.setProperty("/skillPoolVisible", !bVisible);
+		},
+	    onSkillChanged: function(){
+			this._recalculateSkillsFooter();
+		},
+
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
+		_setPoolVisible: function (bVisible = true) {
+			var oViewModel = this.getModel("multipleSkillModel");
+
+			oViewModel.setProperty("/skillPoolVisible", bVisible);
+		},
 		_findEmployee: function (oViewModel, sPernr) {
 			var oModel = this.getModel();
 			var sYear = oViewModel.getProperty("/selectedYear");
@@ -481,14 +537,14 @@ sap.ui.define([
 			this._getEmployeeList();
 		},
 		_getEmployeeSingle: function () {
-			
+
 			var oModel = this.getModel();
 			var oViewModel = this.getModel("multipleSkillModel");
 			var that = this;
 			var sPernr = oViewModel.getProperty("/currentEmployee/Pernr");
 			var sSelectedYear = oViewModel.getProperty("/selectedYear");
 
-			var sPath = oModel.createKey("/EmployeeSet",{
+			var sPath = oModel.createKey("/EmployeeSet", {
 				Evprd: sSelectedYear,
 				Pernr: sPernr
 			});
@@ -499,12 +555,12 @@ sap.ui.define([
 					var aEmp = oViewModel.getProperty("/employeeList");
 
 					var sIndex = _.findIndex(aEmp, ["Pernr", sPernr]);
-					if(sIndex !== -1){
+					if (sIndex !== -1) {
 						aEmp[sIndex] = _.clone(oData);
 					}
 					//console.log(oData.results);
 					oViewModel.setProperty("/employeeList", _.cloneDeep(aEmp));
-					
+
 				},
 				error: function (oError) {
 				}
@@ -518,35 +574,64 @@ sap.ui.define([
 			var sSelectedYear = oViewModel.getProperty("/selectedYear");
 			var sSearch = oViewModel.getProperty("/employeeSearchQuery") || null;
 			var aFilter = [new Filter("Evprd", FilterOperator.EQ, sSelectedYear)];
-			if(sSearch){
+			if (sSearch) {
 				aFilter.push(new Filter("Query", FilterOperator.EQ, sSearch))
 			}
 			this.byId("idEmployeeListTable").getBinding("items").filter(aFilter);
 
 
-			return;
+			// return;
 
-			var sPath = "/EmployeeSet";
-			var that = this;
-			var aFilters = []
-			aFilters.push(new Filter("Evprd", FilterOperator.EQ, sSelectedYear));
+			// var sPath = "/EmployeeSet";
+			// var that = this;
+			// var aFilters = []
+			// aFilters.push(new Filter("Evprd", FilterOperator.EQ, sSelectedYear));
 
-			//Refresh data first
-			oViewModel.setProperty("/employeeList", []);
+			// //Refresh data first
+			// oViewModel.setProperty("/employeeList", []);
 
-			//Set busy text
-			this.openBusyFragment("EMPLOYEE_LIST_BEING_FETCHED", []);
-			oModel.read(sPath, {
-				filters: aFilters,
-				success: function (oData, oResponse) {
-					//console.log(oData.results);
-					oViewModel.setProperty("/employeeList", _.cloneDeep(oData.results));
-					that.closeBusyFragment();
-				},
-				error: function (oError) {
-					that.closeBusyFragment();
-				}
+			// //Set busy text
+			// this.openBusyFragment("EMPLOYEE_LIST_BEING_FETCHED", []);
+			// oModel.read(sPath, {
+			// 	filters: aFilters,
+			// 	success: function (oData, oResponse) {
+			// 		//console.log(oData.results);
+			// 		oViewModel.setProperty("/employeeList", _.cloneDeep(oData.results));
+			// 		that.closeBusyFragment();
+			// 	},
+			// 	error: function (oError) {
+			// 		that.closeBusyFragment();
+			// 	}
+			// });
+
+		},
+		_recalculateSkillsFooter: function () {
+			var oViewModel = this.getModel("multipleSkillModel");
+			var aSkills = oViewModel.getProperty("/employeeSkill");
+			var oSkillFooter = {
+				currentAverage: null,
+				targetAverage: null,
+				realisedAverage: null
+			};
+			var currentTotal = 0;
+			var targetTotal = 0;
+			var realisedTotal = 0;
+
+			aSkills.forEach((oSkill, i) => {
+				currentTotal = oSkill.Avlbl !== "" ? currentTotal + parseInt(oSkill.Avlbl,10) : currentTotal;
+				targetTotal = oSkill.Trget !== "" ? targetTotal + parseInt(oSkill.Trget,10) : targetTotal;
+				realisedTotal = oSkill.Realz !== "" ? realisedTotal + parseInt(oSkill.Realz,10) : realisedTotal;
 			});
+
+			if (aSkills.length > 0) {
+				oSkillFooter = {
+					currentAverage: formatter.formatWeighting(parseFloat(currentTotal / aSkills.length).toFixed(2),2,false),
+					targetAverage: formatter.formatWeighting(parseFloat(targetTotal / aSkills.length).toFixed(2),2,false),
+					realisedAverage: formatter.formatWeighting(parseFloat(realisedTotal / aSkills.length).toFixed(2),2,false),
+				};
+			}
+
+			oViewModel.setProperty("/employeeSkillsFooter", oSkillFooter);
 
 		},
 		_getEmployeeSkill: function () {
@@ -565,6 +650,9 @@ sap.ui.define([
 			oViewModel.setProperty("/skillPool", []);
 			oViewModel.setProperty("/employeeSkill", []);
 
+			//--Set employee skill pool visible
+			this._setPoolVisible();
+
 			//Set busy text
 			this.openBusyFragment("EMPLOYEE_LIST_BEING_FETCHED", []);
 			oModel.read(sPath, {
@@ -572,8 +660,15 @@ sap.ui.define([
 					"$expand": sExpand
 				},
 				success: function (oData, oResponse) {
+					if (oData.SkillPoolSet.results.length > 0) {
+						that._setPoolVisible(true);
+					} else {
+						that._setPoolVisible(false);
+					}
+
 					oViewModel.setProperty("/skillPool", _.cloneDeep(oData.SkillPoolSet.results));
 					oViewModel.setProperty("/employeeSkill", _.cloneDeep(oData.EmployeeSkillSet.results));
+					that._recalculateSkillsFooter();
 					that.closeBusyFragment();
 				},
 				error: function (oError) {
@@ -596,6 +691,12 @@ sap.ui.define([
 				currentSkill: null,
 				selectedSkill: {},
 				employeeSearchQuery: null,
+				skillPoolVisible: true,
+				employeeSkillsFooter: {
+					currentAverage: null,
+					targetAverage: null,
+					realisedAverage: null
+				},
 				evaluationList: [
 					{
 						Key: "",
@@ -626,7 +727,7 @@ sap.ui.define([
 			});
 
 		},
-		
+
 		_initiateYears: function () {
 			var sToday = new Date().getFullYear();
 			var aDates = [];

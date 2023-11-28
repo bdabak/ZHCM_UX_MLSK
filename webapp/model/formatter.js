@@ -14,7 +14,25 @@ sap.ui.define([], function () {
 				return "";
 			}
 			return parseFloat(sValue).toFixed(2);
-		}
+		},
+		formatWeighting: function (v, d = 2, u = true) {
+			if(!parseFloat(v) >= 1){
+			  return null;
+			}
+			var oFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+			  groupingEnabled: false, // grouping is enabled
+			  decimalSeparator: ",", // the decimal separator must be different from the grouping separator
+			  decimals: d
+			});
+	  
+			var f = oFormat.format(parseFloat(v));
+	  
+			if(u){
+			  f = " (" + f +  "%)";
+			}
+	  
+			return f;
+		  },
 
 	};
 

@@ -134,33 +134,174 @@ sap.ui.define([
 		},
 
 		alertMessage: function (sType, sTitle, sMessage, aParam) {
-			var sIcon = sap.m.MessageBox.Icon.NONE;
+			var sIcon;
+
 			switch (sType) {
-			case "W":
-				sIcon = MessageBox.Icon.WARNING;
-				break;
-			case "E":
-				sIcon = MessageBox.Icon.ERROR;
-				break;
-			case "S":
-				sIcon = MessageBox.Icon.SUCCESS;
-				break;
-			case "I":
-				sIcon = MessageBox.Icon.INFORMATION;
-				break;
-			default:
-				sIcon = MessageBox.Icon.NONE;
+				case "W":
+					sIcon = "warning";
+					break;
+				case "E":
+					sIcon = "error";
+					break;
+				case "S":
+					sIcon = "success";
+					break;
+				case "I":
+					sIcon = "information";
+					break;
+				default:
+					sIcon = "success";
+			}
+			// var sIcon = sap.m.MessageBox.Icon.NONE;
+			// switch (sType) {
+			// case "W":
+			// 	sIcon = MessageBox.Icon.WARNING;
+			// 	break;
+			// case "E":
+			// 	sIcon = MessageBox.Icon.ERROR;
+			// 	break;
+			// case "S":
+			// 	sIcon = MessageBox.Icon.SUCCESS;
+			// 	break;
+			// case "I":
+			// 	sIcon = MessageBox.Icon.INFORMATION;
+			// 	break;
+			// default:
+			// 	sIcon = MessageBox.Icon.NONE;
+			// }
+
+			// MessageBox.show(this.getText(sMessage, aParam), {
+			// 	icon: sIcon, // default
+			// 	title: this.getText(sTitle), // default
+			// 	actions: sap.m.MessageBox.Action.OK // default
+			// });
+
+			this.toastMessage({
+				text: this.getText(sMessage, aParam),
+				title: this.getText(sTitle),
+				icon: sIcon,
+				showConfirmButton: true,
+				timer: undefined,
+			});
+
+		},
+		// toastMessage: function (sMessage, aParam) {
+		// 	MessageToast.show(this.getText(sMessage, aParam));
+		// },
+
+		toastMessage: function (
+			opts
+		) {
+			var options = {
+				title: null,
+				text: null,
+				html: null,
+				icon: "info",
+				position: "top",
+				timer: undefined,
+				timerProgressBar: false,
+				showConfirmButton: false,
+				confirmButtonText: this.getText("CONFIRM_ACTION", []),
+				confirmButtonColor: "#3085d6",
+				showCancelButton: false,
+				cancelButtonText: this.getText("CANCEL_ACTION", []),
+				cancelButtonColor: "#d33",
+				showCloseButton: false,
+				toast: true,
+				timer: 3000,
+				timerProgressBar: false,
+				customClass: {
+					popup: "colored-toast"
+				},
+				iconColor: "white",
+				backdrop:false
+			};
+
+			for (var k in options) {
+				if (opts.hasOwnProperty(k)) {
+					options[k] = opts[k];
+				}
 			}
 
-			MessageBox.show(this.getText(sMessage, aParam), {
-				icon: sIcon, // default
-				title: this.getText(sTitle), // default
-				actions: sap.m.MessageBox.Action.OK // default
+			Swal.fire({ ...options }).then(function (result) {
+				if (result.isConfirmed) {
+					if (opts.confirmCallbackFn !== undefined) {
+						try {
+							opts.confirmCallbackFn();
+						} catch (e) {
+
+						}
+					}
+				}
+				if (result.isCancelled) {
+					if (opts.cancelCallbackFn !== undefined) {
+						try {
+							opts.cancelCallbackFn();
+						} catch (e) {
+
+						}
+					}
+				}
 			});
 		},
-		toastMessage: function (sMessage, aParam) {
-			MessageToast.show(this.getText(sMessage, aParam));
+		confirmDialog: function (opts) {
+			var options = {
+				title: null,
+				html: null,
+				icon: "info",
+				position: "center",
+				timer: undefined,
+				timerProgressBar: false,
+				showConfirmButton: true,
+				confirmButtonText: this.getText("CONFIRM_ACTION", []),
+				confirmButtonColor: "#3085d6",
+
+				showCancelButton: true,
+				cancelButtonText: this.getText("CANCEL_ACTION", []),
+				cancelButtonColor: "#d33",
+				showCloseButton: false,
+				focusConfirm: true,
+				toast: false,
+				timer: undefined,
+				timerProgressBar: false,
+				allowOutsideClick: false,
+				allowEscapeKey: false,
+				allowEnterKey: true,
+				input: undefined,
+				inputLabel: "",
+				inputPlaceholder: "",
+				inputAttributes: {},
+				preConfirm: null
+			};
+
+			for (var k in options) {
+				if (opts.hasOwnProperty(k)) {
+					options[k] = opts[k];
+				}
+			}
+
+			Swal.fire({ ...options }).then(function (result) {
+				if (result.isConfirmed) {
+					if (opts.confirmCallbackFn !== undefined) {
+						try {
+							opts.confirmCallbackFn();
+						} catch (e) {
+
+						}
+					}
+				}
+				if (result.isCancelled) {
+					if (opts.cancelCallbackFn !== undefined) {
+						try {
+							opts.cancelCallbackFn();
+						} catch (e) {
+
+						}
+					}
+				}
+			});
 		},
+
 		/**
 		 * Adds a history entry in the FLP page history
 		 * @public

@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
-	<Dialog title="{i18n>CREATE_NEW_SKILL_TITLE}" state="None" type="Standard" contentWidth="60%" contentHeight="15%">
+	<Dialog title="{i18n>CREATE_NEW_SKILL_TITLE}" state="None" type="Standard" contentWidth="60%" contentHeight="300px">
 		<content>
 			<f:Form editable="true" id="idNewSkillForm">
 				<f:layout>

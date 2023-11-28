@@ -24,7 +24,7 @@
 			<Button text="{i18n>CANCEL_ACTION}" press="onCancelUpdateDialog"/>
 		</beginButton>
 		<endButton>
-			<Button text="{i18n>UPDATE_ACTION}" icon="sap-icon://save" press="onUpdateSkill" type="Emphasized"/>
+			<Button text="{i18n>UPDATE_ACTION}" icon="sap-icon://save" press=".onUpdateSkill" type="Emphasized"/>
 		</endButton>
 	</Dialog>
 </core:FragmentDefinition>

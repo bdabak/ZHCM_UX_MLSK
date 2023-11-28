@@ -1,0 +1,45 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:dnd="sap.ui.core.dnd"
+    xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+    <Table id="idSkillPoolTable" alternateRowColors="true" items="{
+											path: 'multipleSkillModel>/skillPool',
+											templateShareable: false
+										}" noDataText="{i18n>NO_DATA_SKILL_POOL}" sticky="HeaderToolbar,ColumnHeaders" visible="{= ${multipleSkillModel>/currentEmployee} ? true : false }">
+        <headerToolbar>
+            <OverflowToolbar id="infobar1" style="Clear">
+                <Title id="title1" text="{i18n>SKILL_POOL}" />
+                <ToolbarSpacer />
+                <Button  tooltip="Kapat" icon="sap-icon://hide" press=".onToggleFullScreen"/>
+                <Button id="idCreateNewSkillButton" icon="sap-icon://add" text="{i18n>NEW_ACTION}" press=".onCreateSkill" type="Emphasized" />
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+            <Column>
+                <Text text="{i18n>SKLTX}" />
+            </Column>
+            <Column width="18%" demandPopin="true" minScreenWidth="Desktop">
+                <Text text="{i18n>ISUSD}" />
+            </Column>
+            <Column width="18%" demandPopin="true" minScreenWidth="Desktop">
+                <Text text="{i18n>ACTVE}" />
+            </Column>
+            <Column width="15%" demandPopin="true" minScreenWidth="Desktop" />
+        </columns>
+        <items>
+            <ColumnListItem>
+                <Link text="{multipleSkillModel>Skltx}" cd:Source="POOL" cd:Sklid="{multipleSkillModel>Sklid}" press=".onModifySkill" />
+                <CheckBox selected="{multipleSkillModel>Isusd}" editable="false" />
+                <CheckBox selected="{multipleSkillModel>Actve}" cd:Sklid="{multipleSkillModel>Sklid}" select="onActiveSkill" />
+                <Button icon="sap-icon://delete" text="{i18n>DELETE_ACTION}" cd:Sklid="{multipleSkillModel>Sklid}" press=".onDeleteSkill" type="Reject" enabled="{=${multipleSkillModel>Isusd} === false }" />
+            </ColumnListItem>
+        </items>
+        <dragDropConfig>
+            <dnd:DragInfo groupName="addEmployeeSkill" sourceAggregation="items" dragStart=".onDragStart" enabled="{multipleSkillModel>/editable}" />
+        </dragDropConfig>
+        <layoutData>
+            <l:SplitterLayoutData size="{= ${multipleSkillModel>/currentEmployee} ? 'auto' : '0%' }" />
+        </layoutData>
+    </Table>
+</core:FragmentDefinition>

@@ -21,4 +21,4 @@ builder:
           name: ZHCM_UX_MLSK
           description: Çoklu Beceri Tablosu
           package: ZHR
-          transport: SFDK900258
+          transport: SFDK900292

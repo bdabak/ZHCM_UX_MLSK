@@ -100,13 +100,38 @@ sap.ui.define([
 			}
 		},
 		onSaveEmployeeSkill: function (oEvent) {
-			debugger;
+			var that = this;
 			var oModel = this.getModel();
 			var oViewModel = this.getModel("multipleSkillModel");
 			var oCurrentEmployee = oViewModel.getProperty("/currentEmployee");
 			var sSelectedYear = oViewModel.getProperty("/selectedYear");
 			var aEmployeeSkill = oViewModel.getProperty("/employeeSkill");
+			var bError = false;
 			if (aEmployeeSkill) {
+				//--Checks
+				if(aEmployeeSkill.length>0){
+					aEmployeeSkill.forEach((oSkill)=>{
+						if(oSkill.Avlbl === null || oSkill.Avlbl === undefined || oSkill.Avlbl === "" ){
+							that.alertMessage("E", "MESSAGE_ERROR", "CURRENT_MUST_BE_FILLED", [oSkill.Skltx]);
+							bError = true;
+						}
+						if(oSkill.Trget === null || oSkill.Trget === undefined || oSkill.Trget === "" ){
+							that.alertMessage("E", "MESSAGE_ERROR", "TARGET_MUST_BE_FILLED", [oSkill.Skltx]);
+							bError = true;
+						}
+						if(oSkill.Dpexp.trim().length === 0){
+							that.alertMessage("E", "MESSAGE_ERROR", "DESCRIPTION_MUST_BE_FILLED", [oSkill.Skltx]);
+							bError = true;
+						}
+					});
+				}
+				if(bError){
+					return;
+				}
+				//--Checks
+
+
+
 				var oNewEntry = oModel.createEntry("/EmployeeSet");
 				oViewModel.setProperty("/selectedEmployee", _.clone(oNewEntry.getObject()));
 				var oSelectedEmployee = oViewModel.getProperty("/selectedEmployee")
@@ -651,7 +676,7 @@ sap.ui.define([
 			oViewModel.setProperty("/employeeSkill", []);
 
 			//--Set employee skill pool visible
-			this._setPoolVisible();
+			// this._setPoolVisible();
 
 			//Set busy text
 			this.openBusyFragment("EMPLOYEE_LIST_BEING_FETCHED", []);
@@ -660,11 +685,11 @@ sap.ui.define([
 					"$expand": sExpand
 				},
 				success: function (oData, oResponse) {
-					if (oData.SkillPoolSet.results.length > 0) {
-						that._setPoolVisible(true);
-					} else {
-						that._setPoolVisible(false);
-					}
+					// if (oData.SkillPoolSet.results.length > 0) {
+					// 	that._setPoolVisible(true);
+					// } else {
+					// 	that._setPoolVisible(false);
+					// }
 
 					oViewModel.setProperty("/skillPool", _.cloneDeep(oData.SkillPoolSet.results));
 					oViewModel.setProperty("/employeeSkill", _.cloneDeep(oData.EmployeeSkillSet.results));

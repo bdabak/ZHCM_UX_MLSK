@@ -52,7 +52,7 @@
             "fullWidth": true
         },
         "dependencies": {
-            "minUI5Version": "1.71.59",
+            "minUI5Version": "1.71.60",
             "libs": {
                 "sap.collaboration": {
                     "lazy": true
